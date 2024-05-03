@@ -14,10 +14,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const userValidation_1 = __importDefault(require("../validations/userValidation"));
 const userSchema_1 = __importDefault(require("../models/userSchema"));
+const passwordHashing_1 = __importDefault(require("../middleware/passwordHashing"));
 const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const userdata = {
+            fullName: req.body.Fullname,
+            username: req.body.username,
+            email: req.body.email,
+            profilepic: req.body.profilepic,
+            password: yield (0, passwordHashing_1.default)(req.body.password),
+        };
         // Validate request body using Joi schema
-        const { error, value: validatedUser } = userValidation_1.default.validate(req.body);
+        const { error, value: validatedUser } = userValidation_1.default.validate(userdata);
         if (error) {
             return res.status(400).json({ error: error.details[0].message });
         }
