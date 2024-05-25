@@ -16,7 +16,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const db = process.env.DB_CONNECTION;
 const connectdb = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield mongoose_1.default.connect('mongodb://localhost:27017/chatapp');
+        yield mongoose_1.default.connect(db);
         console.log('database connected');
     }
     catch (error) {

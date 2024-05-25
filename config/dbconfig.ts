@@ -1,10 +1,10 @@
 import mongoose from 'mongoose'
-const db=process.env.DB_CONNECTION
+const db=process.env.DB_CONNECTION as string
 const connectdb = async()=>{
 
     try{
         
-        await mongoose.connect('mongodb://localhost:27017/chatapp')
+        await mongoose.connect(db as string)
         console.log('database connected')
     }
     catch(error){

@@ -13,20 +13,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const userSchema_1 = __importDefault(require("../models/userSchema"));
+const authToken_1 = require("../middleware/authToken");
+const passwordHashing_1 = require("../middleware/passwordHashing");
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password } = req.body;
         const user = yield userSchema_1.default.findOne({ email });
         if (user) {
-            if (user.password === password) {
-                res.status(200).json({ message: 'logged in' });
+            if (yield (0, passwordHashing_1.verifyPassword)(password, user.password)) {
+                const token = yield (0, authToken_1.loginToken)(user);
+                res.status(200).json({ message: "loged in", token: token });
             }
             else {
-                res.status(401).json({ message: "password dosn't match" });
+                res.status(401).json("password not match");
             }
         }
         else {
-            res.status(401).json({ message: "user not found" });
+            res.status(401).json("user not found");
         }
     }
     catch (error) {

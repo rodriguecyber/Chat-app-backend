@@ -7,7 +7,17 @@ const passwordHashing = async(password:string) =>{
         return hashedPassword
     }
     catch(error){
-    return('password')
+   throw new Error('failed to hash password')
     }
+}
+  export const verifyPassword=async(password:string,hashedPassword:string)=>{
+  try{
+
+      return await bcrypt.compare(password,hashedPassword)
+    }
+    catch(error){
+        console.log(error)
+    }
+     
 }
 export default passwordHashing

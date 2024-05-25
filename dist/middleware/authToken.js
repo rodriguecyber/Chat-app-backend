@@ -12,25 +12,30 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verifyPassword = void 0;
-const bcrypt_1 = __importDefault(require("bcrypt"));
-const passwordHashing = (password) => __awaiter(void 0, void 0, void 0, function* () {
+exports.verifyAuth = exports.loginToken = void 0;
+const express_1 = require("express");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const loginToken = (user) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const saltRounds = 10;
-        const hashedPassword = yield bcrypt_1.default.hash(password, saltRounds);
-        return hashedPassword;
+        return jsonwebtoken_1.default.sign({ user }, process.env.SECRET_KEY, { expiresIn: '2h' });
     }
     catch (error) {
-        throw new Error('failed to hash password');
+        console.log(process.env.SECRET_KEY);
     }
 });
-const verifyPassword = (password, hashedPassword) => __awaiter(void 0, void 0, void 0, function* () {
+exports.loginToken = loginToken;
+const verifyAuth = (token) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        return yield bcrypt_1.default.compare(password, hashedPassword);
+        const decodedToken = jsonwebtoken_1.default.verify(token, process.env.SECRET_KEY);
+        if (decodedToken) {
+            express_1.response.status(200).json(decodedToken);
+        }
+        else {
+            express_1.response.status(200).json('expired');
+        }
     }
     catch (error) {
-        console.log(error);
+        throw Error('failed to verify token');
     }
 });
-exports.verifyPassword = verifyPassword;
-exports.default = passwordHashing;
+exports.verifyAuth = verifyAuth;
