@@ -1,0 +1,14 @@
+{
+  "test": {
+    "port": 3306,
+    "dialect": "mysql"
+  },
+  "production": {
+    "port": 3306,
+    "dialect": "mysql"
+  },
+  "development": {
+    "port": 3306,
+    "dialect": "mysql"
+  }
+}
